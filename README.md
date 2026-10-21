@@ -64,20 +64,6 @@ modifying it.
 - Notebook for inspecting a query and its top 3 matches.
 - Command-line scripts for each step of the pipeline.
 
-## Project status
-
-- [x] BRepNet patched to run on a modern CPU-only Python stack
-- [x] Embeddings generated for all 500 parts (`outputs/embeddings.npy`)
-- [x] FAISS index built (`outputs/faiss_index.bin`)
-- [x] Part properties computed for all 500 parts (`outputs/part_properties.csv`)
-- [x] Existing-part query script
-- [x] Size-filtered search
-- [x] New-part search (embed and query without touching the index)
-- [x] Streamlit app
-- [x] Retrieval inspection notebook
-- [ ] GPU acceleration (currently CPU-only)
-- [ ] Automated test suite
-
 ## Project structure
 
 ```
