@@ -1,0 +1,8 @@
+.venv/
+data/
+outputs/
+external/
+__pycache__/
+*.pyc
+.ipynb_checkpoints/
+.streamlit/
