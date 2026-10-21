@@ -3,6 +3,39 @@
 Search a collection of 500 Fusion 360 CAD parts for geometrically similar
 designs, using BRepNet embeddings and FAISS nearest-neighbor search.
 
+## Run the app
+
+```
+conda activate brepnet
+streamlit run app.py
+```
+
+(If the `brepnet` environment does not exist yet, see Environments below
+for how to create it.)
+
+This opens the app in a browser tab, usually at `http://localhost:8501`.
+Once it is open:
+
+1. In the sidebar, choose a query source: **Existing part** (pick a
+   file stem from the dropdown) or **Upload STEP file** (upload a
+   `.step`/`.stp` file not already in the 500-part set).
+2. Optionally check **Filter by size** and adjust the **Tolerance**
+   slider (5-50%, default 20%) to restrict matches to parts with
+   similar bounding-box dimensions.
+3. The query part and its top 5 matches appear in the main area, each
+   with a thumbnail, distance, size, volume, area, and face count. If
+   the size filter removes every candidate, the app shows "No matches
+   within tolerance" instead of an empty result.
+
+![App screenshot: querying the thin column 100243_9fb796fe_0006 and its top 5 matches](docs/app_screenshot.png)
+
+The example above queries `100243_9fb796fe_0006`, a thin column
+(19 x 19 x 130). The top matches are other elongated bars at different
+scales, which illustrates the size limitation noted below: embedding
+distance tracks shape, not absolute size.
+
+Stop the app with `Ctrl+C` in the terminal it is running in.
+
 ## How it works
 
 Each STEP file is run through BRepNet, a graph neural network that

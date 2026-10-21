@@ -59,31 +59,36 @@ def thumbnail_path(stem):
     return path if path.exists() else None
 
 
-def render_properties(props):
-    st.write(f"Size: {props['dim_1']:.2f} x {props['dim_2']:.2f} x {props['dim_3']:.2f}")
-    st.write(f"Volume: {props['volume']:.2f}")
-    st.write(f"Area: {props['area']:.2f}")
-    st.write(f"Faces: {props['num_faces']}")
+def properties_line(props):
+    return (
+        f"{props['dim_1']:.1f} x {props['dim_2']:.1f} x {props['dim_3']:.1f}  |  "
+        f"Vol {props['volume']:.0f}  |  Area {props['area']:.0f}  |  Faces {props['num_faces']}"
+    )
 
 
 def render_match_card(result):
     with st.container(border=True):
         thumb = thumbnail_path(result["stem"])
         if thumb is not None:
-            st.image(str(thumb), width="stretch")
+            st.image(str(thumb), width=150)
         else:
             st.caption("No preview available")
         st.markdown(f"**{result['stem']}**")
-        st.write(f"Distance: {result['distance']:.4f}")
-        st.write(f"Size: {result['dim_1']:.2f} x {result['dim_2']:.2f} x {result['dim_3']:.2f}")
-        st.write(f"Volume: {result['volume']:.2f}")
-        st.write(f"Area: {result['area']:.2f}")
-        st.write(f"Faces: {result['num_faces']}")
+        st.caption(f"Distance {result['distance']:.4f}")
+        st.caption(properties_line(result))
 
 
 def main():
     st.set_page_config(page_title="CAD Design Similarity Search", layout="wide")
-    st.title("CAD Design Similarity Search")
+    st.markdown(
+        """
+        <style>
+        .block-container { padding-top: 3rem; padding-bottom: 1rem; overflow: visible; }
+        </style>
+        """,
+        unsafe_allow_html=True,
+    )
+    st.markdown("#### CAD Design Similarity Search")
 
     index, manifest, properties, embeddings = get_resources()
 
@@ -136,25 +141,23 @@ def main():
             except Exception as e:
                 error = str(e)
 
-    st.header("Query")
     if error is not None:
         st.error(f"Could not process the uploaded file: {error}")
     elif query_label is not None:
-        col1, col2 = st.columns([1, 2])
+        col1, col2 = st.columns([1, 6])
         with col1:
             if query_thumb is not None:
-                st.image(str(query_thumb), width="stretch")
+                st.image(str(query_thumb), width=110)
             else:
-                st.caption("No preview available")
+                st.caption("No preview")
         with col2:
-            st.markdown(f"**{query_label}**")
+            st.markdown(f"**Query: {query_label}**")
             if query_properties is not None:
-                render_properties(query_properties)
+                st.caption(properties_line(query_properties))
     else:
         st.info("Choose an existing part or upload a STEP file to begin.")
 
     if query_label is not None and error is None:
-        st.header("Top 5 matches")
         if not results:
             st.warning("No matches within tolerance")
         else:
